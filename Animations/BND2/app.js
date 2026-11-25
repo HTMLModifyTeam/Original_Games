@@ -9,7 +9,6 @@ renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.12;
 const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
-
 const cream = new THREE.Color('#f3f1eb');
 const scene = new THREE.Scene();
 scene.background = cream.clone();
@@ -23,7 +22,6 @@ scene.add(key);
 const fill = new THREE.DirectionalLight(0x8b919b, 1.4);
 fill.position.set(4, 1, 5);
 scene.add(fill);
-
 const introCanvas = document.createElement('canvas');
 introCanvas.width = 1600;
 introCanvas.height = 260;
@@ -36,59 +34,85 @@ introCtx.font = '82px "Palatino Linotype", "Book Antiqua", Palatino, Georgia, se
 introCtx.fillText('A Viacom Presentation', 800, 132);
 const introTexture = new THREE.CanvasTexture(introCanvas);
 introTexture.colorSpace = THREE.SRGBColorSpace;
-const introMaterial = new THREE.MeshBasicMaterial({ map: introTexture, transparent: true, depthWrite: false, side: THREE.DoubleSide });
+const introMaterial = new THREE.MeshBasicMaterial({
+  map: introTexture,
+  transparent: true,
+  depthWrite: false,
+  side: THREE.DoubleSide
+});
 const introCard = new THREE.Mesh(new THREE.PlaneGeometry(6.2, 1.02), introMaterial);
 introCard.position.set(0, 0, 0.55);
 introCard.visible = false;
 scene.add(introCard);
-
 const lineGroup = new THREE.Group();
 scene.add(lineGroup);
-const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 13.8, 16), new THREE.MeshBasicMaterial({ color: 0x111110 }));
+const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 13.8, 16), new THREE.MeshBasicMaterial({
+  color: 0x111110
+}));
 bar.rotation.z = Math.PI / 2;
 lineGroup.add(bar);
 for (const x of [-6.9, 6.9]) {
-  const end = new THREE.Mesh(new THREE.SphereGeometry(0.045, 16, 12), new THREE.MeshBasicMaterial({ color: 0x111110 }));
+  const end = new THREE.Mesh(new THREE.SphereGeometry(0.045, 16, 12), new THREE.MeshBasicMaterial({
+    color: 0x111110
+  }));
   end.position.x = x;
   lineGroup.add(end);
 }
 lineGroup.position.set(-12, -0.62, 0);
-
-const ballMaterial = new THREE.MeshStandardMaterial({ color: 0x85878a, roughness: 0.37, metalness: 0.2 });
+const ballMaterial = new THREE.MeshStandardMaterial({
+  color: 0x85878a,
+  roughness: 0.37,
+  metalness: 0.2
+});
 const ball = new THREE.Mesh(new THREE.SphereGeometry(0.245, 48, 32), ballMaterial);
 ball.position.set(-20, -0.3, 0.32);
 scene.add(ball);
-const ballShadow = new THREE.Mesh(new THREE.CircleGeometry(0.28, 40), new THREE.MeshBasicMaterial({ color: 0x393936, transparent: true, opacity: 0.12, depthWrite: false }));
+const ballShadow = new THREE.Mesh(new THREE.CircleGeometry(0.28, 40), new THREE.MeshBasicMaterial({
+  color: 0x393936,
+  transparent: true,
+  opacity: 0.12,
+  depthWrite: false
+}));
 ballShadow.scale.set(1.6, 0.22, 1);
 ballShadow.position.set(-20, -0.68, 0.12);
 scene.add(ballShadow);
-
 const burstAt = 3.55 + Math.random() * 0.42;
-const particleBalls = Array.from({ length: 18 }, () => {
+const particleBalls = Array.from({
+  length: 18
+}, () => {
   const mesh = new THREE.Mesh(ball.geometry, ballMaterial);
   const radius = 0.12 + Math.random() * 0.12;
   mesh.scale.setScalar(radius / 0.245);
   mesh.visible = false;
   scene.add(mesh);
-  return { mesh, radius, delay: Math.random() * 0.2, vx: (Math.random() - 0.5) * 8.0, vy: 2.7 + Math.random() * 4.2, spin: (Math.random() - 0.5) * 14 };
+  return {
+    mesh,
+    radius,
+    delay: Math.random() * 0.2,
+    vx: (Math.random() - 0.5) * 8.0,
+    vy: 2.7 + Math.random() * 4.2,
+    spin: (Math.random() - 0.5) * 14
+  };
 });
-
 // The macro ball keeps the same geometry so the cut feels continuous.
 const rings = [];
 for (let i = 0; i < 2; i++) {
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.027, 10, 128), new THREE.MeshBasicMaterial({ color: 0x080808 }));
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.027, 10, 128), new THREE.MeshBasicMaterial({
+    color: 0x080808
+  }));
   ring.position.set(0, 0, 4.1 + i * 0.01);
   ring.scale.setScalar(0.001);
   ring.visible = false;
   scene.add(ring);
   rings.push(ring);
 }
-const iris = new THREE.Mesh(new THREE.CircleGeometry(1, 96), new THREE.MeshBasicMaterial({ color: 0x030303 }));
+const iris = new THREE.Mesh(new THREE.CircleGeometry(1, 96), new THREE.MeshBasicMaterial({
+  color: 0x030303
+}));
 iris.position.set(0, 0, 4.25);
 iris.scale.setScalar(0.001);
 iris.visible = false;
 scene.add(iris);
-
 // The oversized navy V and the final red S are all 3D scene geometry.
 const vGroup = new THREE.Group();
 vGroup.visible = false;
@@ -101,27 +125,63 @@ vShape.lineTo(1.38, 1.18);
 vShape.lineTo(0.24, -1.18);
 vShape.quadraticCurveTo(0, -1.31, -0.24, -1.18);
 vShape.closePath();
-const vMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(vShape, { depth: 0.28, bevelEnabled: true, bevelSegments: 5, bevelSize: 0.055, bevelThickness: 0.06, curveSegments: 18 }), new THREE.MeshStandardMaterial({ color: 0x102f63, roughness: 0.28, metalness: 0.42 }));
+const vMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(vShape, {
+  depth: 0.28,
+  bevelEnabled: true,
+  bevelSegments: 5,
+  bevelSize: 0.055,
+  bevelThickness: 0.06,
+  curveSegments: 18
+}), new THREE.MeshStandardMaterial({
+  color: 0x102f63,
+  roughness: 0.28,
+  metalness: 0.42
+}));
 vMesh.castShadow = true;
 vGroup.add(vMesh);
 const vCurve = new THREE.CatmullRomCurve3([new THREE.Vector3(-0.34, 0.13, 0.49), new THREE.Vector3(-0.15, -0.04, 0.51), new THREE.Vector3(0.03, -0.10, 0.52), new THREE.Vector3(0.24, 0.10, 0.50)]);
-const vAccent = new THREE.Mesh(new THREE.TubeGeometry(vCurve, 40, 0.035, 10, false), new THREE.MeshStandardMaterial({ color: 0x3e6593, roughness: 0.25, metalness: 0.36 }));
+const vAccent = new THREE.Mesh(new THREE.TubeGeometry(vCurve, 40, 0.035, 10, false), new THREE.MeshStandardMaterial({
+  color: 0x3e6593,
+  roughness: 0.25,
+  metalness: 0.36
+}));
 vGroup.add(vAccent);
 vGroup.position.set(0, 0.05, 0.2);
 scene.add(vGroup);
 
 function parallelogram() {
   const s = new THREE.Shape();
-  s.moveTo(-1.75, -0.13); s.lineTo(1.42, -0.13); s.lineTo(1.75, 0.13); s.lineTo(-1.42, 0.13); s.closePath();
-  return new THREE.ExtrudeGeometry(s, { depth: 0.09, bevelEnabled: true, bevelSegments: 2, bevelSize: 0.025, bevelThickness: 0.025 });
+  s.moveTo(-1.75, -0.13);
+  s.lineTo(1.42, -0.13);
+  s.lineTo(1.75, 0.13);
+  s.lineTo(-1.42, 0.13);
+  s.closePath();
+  return new THREE.ExtrudeGeometry(s, {
+    depth: 0.09,
+    bevelEnabled: true,
+    bevelSegments: 2,
+    bevelSize: 0.025,
+    bevelThickness: 0.025
+  });
 }
-const redBarMatA = new THREE.MeshStandardMaterial({ color: 0xd92227, roughness: 0.3, metalness: 0.18, transparent: true, opacity: 0, depthWrite: false });
+const redBarMatA = new THREE.MeshStandardMaterial({
+  color: 0xd92227,
+  roughness: 0.3,
+  metalness: 0.18,
+  transparent: true,
+  opacity: 0,
+  depthWrite: false
+});
 const redBarMatB = redBarMatA.clone();
 const topBar = new THREE.Mesh(parallelogram(), redBarMatA);
 const bottomBar = new THREE.Mesh(parallelogram(), redBarMatB);
 topBar.visible = bottomBar.visible = false;
 scene.add(topBar, bottomBar);
-const redDot = new THREE.Mesh(new THREE.SphereGeometry(0.16, 32, 24), new THREE.MeshBasicMaterial({ color: 0xf02a2e, transparent: true, opacity: 0 }));
+const redDot = new THREE.Mesh(new THREE.SphereGeometry(0.16, 32, 24), new THREE.MeshBasicMaterial({
+  color: 0xf02a2e,
+  transparent: true,
+  opacity: 0
+}));
 redDot.position.set(0, 0, 1.35);
 redDot.visible = false;
 scene.add(redDot);
@@ -130,34 +190,55 @@ const sCurve = new THREE.CatmullRomCurve3([
   new THREE.Vector3(0.95, 0.48, 0.85), new THREE.Vector3(0.52, 0.16, 0.85), new THREE.Vector3(-0.52, -0.11, 0.85),
   new THREE.Vector3(-0.93, -0.46, 0.85), new THREE.Vector3(-0.62, -0.87, 0.85), new THREE.Vector3(0.38, -1.02, 0.85), new THREE.Vector3(1.12, -0.76, 0.85)
 ]);
-const sMaterial = new THREE.MeshBasicMaterial({ color: 0xe8242a, transparent: true, opacity: 0 });
+const sMaterial = new THREE.MeshBasicMaterial({
+  color: 0xe8242a,
+  transparent: true,
+  opacity: 0
+});
 const sMesh = new THREE.Mesh(new THREE.TubeGeometry(sCurve, 110, 0.095, 14, false), sMaterial);
 sMesh.visible = false;
 scene.add(sMesh);
-
 // The show only starts once every texture has loaded (or after a short timeout), so nothing pops in late.
 let assetsReady = false;
 const loadingManager = new THREE.LoadingManager();
-loadingManager.onLoad = () => { assetsReady = true; };
-setTimeout(() => { assetsReady = true; }, 3500);
+loadingManager.onLoad = () => {
+  assetsReady = true;
+};
+setTimeout(() => {
+  assetsReady = true;
+}, 3500);
 const assetLoader = new THREE.TextureLoader(loadingManager);
+
 function asset(path) {
   const texture = assetLoader.load(path);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = maxAnisotropy;
   return texture;
 }
+
 function sprite(path, width, height, z, parent = scene) {
-  const material = new THREE.MeshBasicMaterial({ map: asset(path), transparent: true, opacity: 0, depthWrite: false, alphaTest: 0.015, side: THREE.DoubleSide });
+  const material = new THREE.MeshBasicMaterial({
+    map: asset(path),
+    transparent: true,
+    opacity: 0,
+    depthWrite: false,
+    alphaTest: 0.015,
+    side: THREE.DoubleSide
+  });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), material);
   mesh.position.z = z;
   mesh.visible = false;
   parent.add(mesh);
-  return { mesh, material };
+  return {
+    mesh,
+    material
+  };
 }
 const blueSplash = sprite('img/blue-splash.png', 7, 7, 1.2);
 const inkStain = sprite('img/black-ink.png', 7, 7, 1.6);
-const stainSatellites = Array.from({ length: 4 }, (_, i) => {
+const stainSatellites = Array.from({
+  length: 4
+}, (_, i) => {
   const stain = sprite('img/black-ink.png', 4.2, 4.2, 1.55 + i * 0.005);
   stain.mesh.position.set((i % 2 ? 1 : -1) * (2.8 + Math.random()), (i < 2 ? 1 : -1) * (1.8 + Math.random()), stain.mesh.position.z);
   stain.mesh.rotation.z = (Math.random() - 0.5) * 1.2;
@@ -171,36 +252,72 @@ const eyesSprite = sprite('img/eyes-cutout.png', 3.25, 2.17, 3.25, faceCollage);
 eyesSprite.mesh.position.set(0, 0.55, 3.25);
 const mouthSprite = sprite('img/mouth-cutout.png', 2.85, 1.9, 3.3, faceCollage);
 mouthSprite.mesh.position.set(0, -1.08, 3.3);
-
 const speechCanvas = document.createElement('canvas');
-speechCanvas.width = 900; speechCanvas.height = 260;
+speechCanvas.width = 900;
+speechCanvas.height = 260;
 const speechCtx = speechCanvas.getContext('2d');
 speechCtx.clearRect(0, 0, 900, 260);
 speechCtx.font = '900 190px Georgia, "Times New Roman", serif';
-speechCtx.textAlign = 'center'; speechCtx.textBaseline = 'middle';
-speechCtx.fillStyle = '#fffef4'; speechCtx.shadowColor = '#172242'; speechCtx.shadowBlur = 12;
-speechCtx.fillText('ВИD', 450, 132);
+speechCtx.textAlign = 'center';
+speechCtx.textBaseline = 'middle';
+speechCtx.fillStyle = '#fffef4';
+speechCtx.shadowColor = '#172242';
+speechCtx.shadowBlur = 12;
+speechCtx.fillText('BИD', 450, 132);
 const speechTexture = new THREE.CanvasTexture(speechCanvas);
 speechTexture.colorSpace = THREE.SRGBColorSpace;
-const speechMaterial = new THREE.MeshBasicMaterial({ map: speechTexture, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+const speechMaterial = new THREE.MeshBasicMaterial({
+  map: speechTexture,
+  transparent: true,
+  opacity: 0,
+  depthWrite: false,
+  side: THREE.DoubleSide
+});
 const spokenName = new THREE.Mesh(new THREE.PlaneGeometry(2.1, 0.61), speechMaterial);
 spokenName.position.set(0, -1.1, 4.1);
 faceCollage.add(spokenName);
-const whiteBlockMaterial = new THREE.MeshBasicMaterial({ color: 0xfffdf1, transparent: true, opacity: 0, depthWrite: false });
-const speechBlocks = Array.from({ length: 30 }, () => {
+const whiteBlockMaterial = new THREE.MeshBasicMaterial({
+  color: 0xfffdf1,
+  transparent: true,
+  opacity: 0,
+  depthWrite: false
+});
+const speechBlocks = Array.from({
+  length: 30
+}, () => {
   const mat = whiteBlockMaterial.clone();
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.08 + Math.random() * 0.17, 0.06 + Math.random() * 0.13, 0.06 + Math.random() * 0.12), mat);
-  mesh.visible = false; scene.add(mesh);
-  return { mesh, mat, vx: (Math.random() - .5) * 7, vy: 1.4 + Math.random() * 4.5, vz: (Math.random() - .5) * 4, spin: (Math.random() - .5) * 16, delay: Math.random() * .35, ox: (Math.random() - .5) * 0.16, oy: (Math.random() - .5) * 0.14, oz: (Math.random() - .5) * 0.18 };
+  mesh.visible = false;
+  scene.add(mesh);
+  return {
+    mesh,
+    mat,
+    vx: (Math.random() - .5) * 7,
+    vy: 1.4 + Math.random() * 4.5,
+    vz: (Math.random() - .5) * 4,
+    spin: (Math.random() - .5) * 16,
+    delay: Math.random() * .35,
+    ox: (Math.random() - .5) * 0.16,
+    oy: (Math.random() - .5) * 0.14,
+    oz: (Math.random() - .5) * 0.18
+  };
 });
-
 const hammer = new THREE.Group();
-const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.12, 2.25, 16), new THREE.MeshStandardMaterial({ color: 0x654024, roughness: 0.6 }));
-const hammerHead = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.44, 0.62), new THREE.MeshStandardMaterial({ color: 0x544b45, roughness: 0.34, metalness: 0.58 }));
-handle.position.y = -0.25; hammerHead.position.y = 0.98;
-hammer.add(handle, hammerHead); hammer.position.set(5, 5, 5); hammer.visible = false;
+const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.12, 2.25, 16), new THREE.MeshStandardMaterial({
+  color: 0x654024,
+  roughness: 0.6
+}));
+const hammerHead = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.44, 0.62), new THREE.MeshStandardMaterial({
+  color: 0x544b45,
+  roughness: 0.34,
+  metalness: 0.58
+}));
+handle.position.y = -0.25;
+hammerHead.position.y = 0.98;
+hammer.add(handle, hammerHead);
+hammer.position.set(5, 5, 5);
+hammer.visible = false;
 scene.add(hammer);
-
 const sculpture = new THREE.Group();
 sculpture.visible = false;
 scene.add(sculpture);
@@ -213,60 +330,151 @@ bustShape.bezierCurveTo(0.78, 2.37, 1.27, 1.4, 1.12, 0.12);
 bustShape.bezierCurveTo(1.18, -0.48, 1.5, -0.75, 1.56, -1.24);
 bustShape.bezierCurveTo(1.58, -1.8, 1.04, -1.95, 0.75, -2.37);
 bustShape.closePath();
-const stoneMat = new THREE.MeshStandardMaterial({ color: 0x805631, roughness: 0.62, metalness: 0.08 });
-const bust = new THREE.Mesh(new THREE.ExtrudeGeometry(bustShape, { depth: 0.52, bevelEnabled: true, bevelSegments: 8, bevelSize: 0.1, bevelThickness: 0.12, curveSegments: 24 }), stoneMat);
-bust.position.z = 0.02; bust.castShadow = true; sculpture.add(bust);
+const stoneMat = new THREE.MeshStandardMaterial({
+  color: 0x805631,
+  roughness: 0.62,
+  metalness: 0.08
+});
+const bust = new THREE.Mesh(new THREE.ExtrudeGeometry(bustShape, {
+  depth: 0.52,
+  bevelEnabled: true,
+  bevelSegments: 8,
+  bevelSize: 0.1,
+  bevelThickness: 0.12,
+  curveSegments: 24
+}), stoneMat);
+bust.position.z = 0.02;
+bust.castShadow = true;
+sculpture.add(bust);
 const sculptureFace = sprite('img/guo-sculpture.png', 3.35, 4.9, 0.68, sculpture);
 sculptureFace.mesh.position.set(0, 0.02, 0.68);
 const toadSprite = sprite('img/toad.png', 1.04, 1.04, 1.06, sculpture);
 toadSprite.mesh.position.set(-0.84, 2.28, 1.06);
-const scream = new THREE.Mesh(new THREE.CircleGeometry(1, 32), new THREE.MeshBasicMaterial({ color: 0x2b1914, transparent: true, opacity: 0.8, depthWrite: false }));
-scream.position.set(0, -0.62, 0.74); scream.scale.set(0.12, 0.035, 1); sculpture.add(scream);
-const screamLip = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.022, 8, 32), new THREE.MeshStandardMaterial({ color: 0xb08252, roughness: 0.4 }));
-screamLip.position.set(0, -0.62, 0.76); screamLip.scale.set(1, 0.44, 1); sculpture.add(screamLip);
-const dust = Array.from({ length: 56 }, (_, i) => {
-  const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.018 + Math.random() * 0.025, 8, 6), new THREE.MeshBasicMaterial({ color: i % 3 === 0 ? 0xffd28a : 0xc68b54, transparent: true, opacity: 0.75 }));
-  mesh.visible = false; scene.add(mesh);
-  return { mesh, phase: Math.random() * Math.PI * 2, radius: 1.5 + Math.random() * 1.1, height: -1.5 + Math.random() * 4.0, speed: 0.55 + Math.random() * 1.2 };
+const scream = new THREE.Mesh(new THREE.CircleGeometry(1, 32), new THREE.MeshBasicMaterial({
+  color: 0x2b1914,
+  transparent: true,
+  opacity: 0.8,
+  depthWrite: false
+}));
+scream.position.set(0, -0.62, 0.74);
+scream.scale.set(0.12, 0.035, 1);
+sculpture.add(scream);
+const screamLip = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.022, 8, 32), new THREE.MeshStandardMaterial({
+  color: 0xb08252,
+  roughness: 0.4
+}));
+screamLip.position.set(0, -0.62, 0.76);
+screamLip.scale.set(1, 0.44, 1);
+sculpture.add(screamLip);
+const dust = Array.from({
+  length: 56
+}, (_, i) => {
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.018 + Math.random() * 0.025, 8, 6), new THREE.MeshBasicMaterial({
+    color: i % 3 === 0 ? 0xffd28a : 0xc68b54,
+    transparent: true,
+    opacity: 0.75
+  }));
+  mesh.visible = false;
+  scene.add(mesh);
+  return {
+    mesh,
+    phase: Math.random() * Math.PI * 2,
+    radius: 1.5 + Math.random() * 1.1,
+    height: -1.5 + Math.random() * 4.0,
+    speed: 0.55 + Math.random() * 1.2
+  };
 });
-
 const fightLabels = [];
+
 function makeFightLabel(label, color, width) {
-  const c = document.createElement('canvas'); c.width = 1200; c.height = 300;
+  const c = document.createElement('canvas');
+  c.width = 1200;
+  c.height = 300;
   const g = c.getContext('2d');
-  g.clearRect(0, 0, c.width, c.height); g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.clearRect(0, 0, c.width, c.height);
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
   g.font = '900 220px Georgia, "Times New Roman", serif';
-  g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = 22; g.shadowOffsetY = 10;
-  g.strokeStyle = 'rgba(0,0,0,.75)'; g.lineWidth = 17; g.strokeText(label, 600, 150);
-  g.shadowBlur = 0; g.shadowOffsetY = 0; g.fillStyle = color; g.fillText(label, 600, 150);
-  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
-  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, width * 0.25), mat); mesh.visible = false; scene.add(mesh);
-  return { mesh, mat };
+  g.shadowColor = 'rgba(0,0,0,.55)';
+  g.shadowBlur = 22;
+  g.shadowOffsetY = 10;
+  g.strokeStyle = 'rgba(0,0,0,.75)';
+  g.lineWidth = 17;
+  g.strokeText(label, 600, 150);
+  g.shadowBlur = 0;
+  g.shadowOffsetY = 0;
+  g.fillStyle = color;
+  g.fillText(label, 600, 150);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const mat = new THREE.MeshBasicMaterial({
+    map: tex,
+    transparent: true,
+    opacity: 0,
+    depthWrite: false,
+    side: THREE.DoubleSide
+  });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, width * 0.25), mat);
+  mesh.visible = false;
+  scene.add(mesh);
+  return {
+    mesh,
+    mat
+  };
 }
 fightLabels.push(makeFightLabel('BИD', '#ddb568', 3.0));
 fightLabels.push(makeFightLabel('PBS', '#80c9f1', 2.6));
 fightLabels.push(makeFightLabel('VIACOM', '#f0eee7', 4.1));
 fightLabels.push(makeFightLabel('SCREEN GEMS', '#e63130', 1.65));
-const fightStarts = [[-5.2, 2.4], [5.2, 2.1], [-5.0, -2.1], [5.0, -2.3]];
-const fightToss = fightLabels.map(() => ({ vx: (Math.random() - .5) * 11, vy: (Math.random() - .5) * 9, vz: (Math.random() - .5) * 3, spin: (Math.random() - .5) * 14 }));
-const debris = Array.from({ length: 48 }, (_, i) => {
+const fightStarts = [
+  [-5.2, 2.4],
+  [5.2, 2.1],
+  [-5.0, -2.1],
+  [5.0, -2.3]
+];
+const fightToss = fightLabels.map(() => ({
+  vx: (Math.random() - .5) * 11,
+  vy: (Math.random() - .5) * 9,
+  vz: (Math.random() - .5) * 3,
+  spin: (Math.random() - .5) * 14
+}));
+const debris = Array.from({
+  length: 48
+}, (_, i) => {
   const colors = [0xf0eee5, 0x418bd2, 0xd93534, 0xc89955];
-  const mat = new THREE.MeshBasicMaterial({ color: colors[i % colors.length], transparent: true, opacity: 0, depthWrite: false });
+  const mat = new THREE.MeshBasicMaterial({
+    color: colors[i % colors.length],
+    transparent: true,
+    opacity: 0,
+    depthWrite: false
+  });
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(.08 + Math.random() * .2, .07 + Math.random() * .18, .07 + Math.random() * .16), mat);
-  mesh.visible = false; scene.add(mesh);
-  return { mesh, mat, vx: (Math.random() - .5) * 10, vy: (Math.random() - .5) * 9, vz: (Math.random() - .5) * 5, spin: (Math.random() - .5) * 18 };
+  mesh.visible = false;
+  scene.add(mesh);
+  return {
+    mesh,
+    mat,
+    vx: (Math.random() - .5) * 10,
+    vy: (Math.random() - .5) * 9,
+    vz: (Math.random() - .5) * 5,
+    spin: (Math.random() - .5) * 18
+  };
 });
-const fightFlashMat = new THREE.MeshBasicMaterial({ color: 0xfff8e9, transparent: true, opacity: 0, depthWrite: false });
+const fightFlashMat = new THREE.MeshBasicMaterial({
+  color: 0xfff8e9,
+  transparent: true,
+  opacity: 0,
+  depthWrite: false
+});
 const fightFlash = new THREE.Mesh(new THREE.CircleGeometry(1, 96), fightFlashMat);
-fightFlash.position.set(0, 0, 4.6); fightFlash.visible = false; scene.add(fightFlash);
+fightFlash.position.set(0, 0, 4.6);
+fightFlash.visible = false;
+scene.add(fightFlash);
 const encoreBurstAt = 3.58 + Math.random() * 0.42;
-
 const logo = new THREE.Group();
 logo.visible = false;
 scene.add(logo);
 const headMaterials = [];
-
 // A streamlined, right-facing P-shaped profile, built as a small blue stone relief.
 const profile = new THREE.Shape();
 profile.moveTo(-0.58, -1.22);
@@ -280,35 +488,89 @@ profile.bezierCurveTo(0.62, 0.11, 0.46, -0.12, 0.23, -0.28);
 profile.lineTo(0.25, -0.73);
 profile.bezierCurveTo(0.52, -0.91, 0.59, -1.08, 0.62, -1.22);
 profile.closePath();
-const profileGeometry = new THREE.ExtrudeGeometry(profile, { depth: 0.34, bevelEnabled: true, bevelSegments: 5, steps: 1, bevelSize: 0.065, bevelThickness: 0.075, curveSegments: 24 });
+const profileGeometry = new THREE.ExtrudeGeometry(profile, {
+  depth: 0.34,
+  bevelEnabled: true,
+  bevelSegments: 5,
+  steps: 1,
+  bevelSize: 0.065,
+  bevelThickness: 0.075,
+  curveSegments: 24
+});
 profileGeometry.computeVertexNormals();
 
 function headTube(group, pts, radius, color) {
   const curve = new THREE.CatmullRomCurve3(pts.map(([x, y, z]) => new THREE.Vector3(x, y, z)));
-  const material = new THREE.MeshStandardMaterial({ color, roughness: 0.3, metalness: 0.44, transparent: true, opacity: 0, depthWrite: false });
+  const material = new THREE.MeshStandardMaterial({
+    color,
+    roughness: 0.3,
+    metalness: 0.44,
+    transparent: true,
+    opacity: 0,
+    depthWrite: false
+  });
   const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, 32, radius, 8, false), material);
   group.add(mesh);
   headMaterials.push(material);
 }
+
 function makeHead(baseColor, highlightColor, eyeColor) {
   const group = new THREE.Group();
-  const baseMat = new THREE.MeshStandardMaterial({ color: baseColor, roughness: 0.35, metalness: 0.56, transparent: true, opacity: 0, depthWrite: false });
-  const reliefMat = new THREE.MeshStandardMaterial({ color: highlightColor, roughness: 0.3, metalness: 0.52, transparent: true, opacity: 0, depthWrite: false });
+  const baseMat = new THREE.MeshStandardMaterial({
+    color: baseColor,
+    roughness: 0.35,
+    metalness: 0.56,
+    transparent: true,
+    opacity: 0,
+    depthWrite: false
+  });
+  const reliefMat = new THREE.MeshStandardMaterial({
+    color: highlightColor,
+    roughness: 0.3,
+    metalness: 0.52,
+    transparent: true,
+    opacity: 0,
+    depthWrite: false
+  });
   headMaterials.push(baseMat, reliefMat);
   const shell = new THREE.Mesh(profileGeometry, baseMat);
   shell.castShadow = true;
   group.add(shell);
   // A sculpted brow, inset eye, cheek fold, nose ridge and lips give the profile a face.
-  headTube(group, [[0.00, 0.86, 0.425], [0.20, 0.91, 0.455], [0.42, 0.85, 0.455]], 0.033, highlightColor);
-  const eyeMat = new THREE.MeshStandardMaterial({ color: eyeColor, roughness: 0.26, metalness: 0.26, transparent: true, opacity: 0, depthWrite: false });
+  headTube(group, [
+    [0.00, 0.86, 0.425],
+    [0.20, 0.91, 0.455],
+    [0.42, 0.85, 0.455]
+  ], 0.033, highlightColor);
+  const eyeMat = new THREE.MeshStandardMaterial({
+    color: eyeColor,
+    roughness: 0.26,
+    metalness: 0.26,
+    transparent: true,
+    opacity: 0,
+    depthWrite: false
+  });
   headMaterials.push(eyeMat);
   const eye = new THREE.Mesh(new THREE.SphereGeometry(0.072, 24, 18), eyeMat);
   eye.scale.set(1.15, 0.62, 0.55);
   eye.position.set(0.27, 0.76, 0.46);
   group.add(eye);
-  headTube(group, [[0.43, 0.82, 0.44], [0.49, 0.67, 0.46], [0.66, 0.60, 0.43]], 0.025, highlightColor);
-  headTube(group, [[0.56, 0.36, 0.45], [0.39, 0.25, 0.46], [0.29, 0.03, 0.43], [0.39, -0.16, 0.40]], 0.028, highlightColor);
-  headTube(group, [[0.47, 0.31, 0.44], [0.62, 0.28, 0.44], [0.72, 0.33, 0.42]], 0.023, highlightColor);
+  headTube(group, [
+    [0.43, 0.82, 0.44],
+    [0.49, 0.67, 0.46],
+    [0.66, 0.60, 0.43]
+  ], 0.025, highlightColor);
+  headTube(group, [
+    [0.56, 0.36, 0.45],
+    [0.39, 0.25, 0.46],
+    [0.29, 0.03, 0.43],
+    [0.39, -0.16, 0.40]
+  ], 0.028, highlightColor);
+  headTube(group, [
+    [0.47, 0.31, 0.44],
+    [0.62, 0.28, 0.44],
+    [0.72, 0.33, 0.42]
+  ], 0.023, highlightColor);
   return group;
 }
 const headMain = makeHead(0x142d4a, 0x315576, 0x86a5bd);
@@ -324,11 +586,11 @@ const tosses = [0, 1].map(() => ({
   rz: (Math.random() - 0.5) * 12
 }));
 logo.add(headMain, headEcho);
-
 const typeCanvas = document.createElement('canvas');
 typeCanvas.width = 1200;
 typeCanvas.height = 320;
 const typeCtx = typeCanvas.getContext('2d');
+
 function drawWordmark() {
   typeCtx.clearRect(0, 0, 1200, 320);
   typeCtx.textAlign = 'center';
@@ -340,7 +602,7 @@ function drawWordmark() {
   typeCtx.shadowOffsetY = 9;
   typeCtx.strokeStyle = '#28180d';
   typeCtx.lineWidth = 18;
-  typeCtx.strokeText('ВИD', 600, 156);
+  typeCtx.strokeText('BИD', 600, 156);
   typeCtx.shadowColor = 'transparent';
   typeCtx.shadowBlur = 0;
   typeCtx.shadowOffsetY = 0;
@@ -351,19 +613,24 @@ function drawWordmark() {
   metal.addColorStop(0.68, '#805022');
   metal.addColorStop(1, '#d4a24e');
   typeCtx.fillStyle = metal;
-  typeCtx.fillText('ВИD', 600, 156);
+  typeCtx.fillText('BИD', 600, 156);
   typeCtx.strokeStyle = 'rgba(255,232,177,.62)';
   typeCtx.lineWidth = 3;
-  typeCtx.strokeText('ВИD', 600, 153);
+  typeCtx.strokeText('BИD', 600, 153);
 }
 drawWordmark();
 const typeTexture = new THREE.CanvasTexture(typeCanvas);
 typeTexture.colorSpace = THREE.SRGBColorSpace;
-const titleMaterial = new THREE.MeshBasicMaterial({ map: typeTexture, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+const titleMaterial = new THREE.MeshBasicMaterial({
+  map: typeTexture,
+  transparent: true,
+  opacity: 0,
+  depthWrite: false,
+  side: THREE.DoubleSide
+});
 const title = new THREE.Mesh(new THREE.PlaneGeometry(4.15, 1.12), titleMaterial);
 title.position.set(0, -2.25, 0.22);
 logo.add(title);
-
 // An alpha-masked glint sweeps over the bronze lettering.
 const shineCanvas = document.createElement('canvas');
 shineCanvas.width = 1200;
@@ -373,10 +640,17 @@ const shineTexture = new THREE.CanvasTexture(shineCanvas);
 shineTexture.colorSpace = THREE.SRGBColorSpace;
 shineTexture.generateMipmaps = false;
 shineTexture.minFilter = THREE.LinearFilter;
-const shineMaterial = new THREE.MeshBasicMaterial({ map: shineTexture, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+const shineMaterial = new THREE.MeshBasicMaterial({
+  map: shineTexture,
+  transparent: true,
+  opacity: 0,
+  depthWrite: false,
+  side: THREE.DoubleSide
+});
 const shine = new THREE.Mesh(new THREE.PlaneGeometry(4.15, 1.12), shineMaterial);
 shine.position.set(0, -2.25, 0.24);
 logo.add(shine);
+
 function drawShine(progress) {
   shineCtx.clearRect(0, 0, 1200, 320);
   const x = -180 + progress * 1560;
@@ -393,22 +667,28 @@ function drawShine(progress) {
   shineCtx.textAlign = 'center';
   shineCtx.textBaseline = 'middle';
   shineCtx.fillStyle = '#fff';
-  shineCtx.fillText('ВИD', 600, 156);
+  shineCtx.fillText('BИD', 600, 156);
   shineCtx.globalCompositeOperation = 'source-over';
   shineTexture.needsUpdate = true;
 }
-
-const ease = x => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
+const ease = x => {
+  x = Math.max(0, Math.min(1, x));
+  return x * x * (3 - 2 * x);
+};
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 const lerp = (a, b, k) => a + (b - a) * k;
 const easeOutCubic = x => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
 const easeInCubic = x => Math.pow(clamp(x, 0, 1), 3);
 // Overshoots slightly past 1 and settles, which gives pop-ins a springy feel.
-const easeOutBack = (x, s = 1.70158) => { x = clamp(x, 0, 1) - 1; return 1 + (s + 1) * x * x * x + s * x * x; };
-
+const easeOutBack = (x, s = 1.70158) => {
+  x = clamp(x, 0, 1) - 1;
+  return 1 + (s + 1) * x * x * x + s * x * x;
+};
 // Parabolic hops: sharp ground contact and a real arc, same height and rhythm as before.
-const hop = run => { const f = (run * 11.4 / Math.PI) % 1; return 0.47 * 4 * f * (1 - f); };
-
+const hop = run => {
+  const f = (run * 11.4 / Math.PI) % 1;
+  return 0.47 * 4 * f * (1 - f);
+};
 // Shared by the opening and the encore so both scatter and bounce identically.
 function updateParticleBalls(time, burstTime) {
   const x0 = -5.9 + (burstTime - 1.78) * 3.65;
@@ -416,8 +696,11 @@ function updateParticleBalls(time, burstTime) {
     const elapsed = time - burstTime - p.delay;
     p.mesh.visible = elapsed >= 0;
     if (elapsed < 0) continue;
-    const gravity = 5.7, floor = -0.62 + p.radius;
-    let y = -0.18, vy = p.vy, remaining = elapsed;
+    const gravity = 5.7,
+      floor = -0.62 + p.radius;
+    let y = -0.18,
+      vy = p.vy,
+      remaining = elapsed;
     for (let bounceIndex = 0; bounceIndex < 5 && remaining > 0; bounceIndex++) {
       const impact = (vy + Math.sqrt(vy * vy + 2 * gravity * Math.max(0, y - floor))) / gravity;
       if (remaining < impact) {
@@ -435,7 +718,6 @@ function updateParticleBalls(time, burstTime) {
     p.mesh.rotation.set(elapsed * p.spin, elapsed * p.spin * 0.65, elapsed * p.spin * 0.8);
   }
 }
-
 // Camera punches: [time, amplitude, duration]. They decay quickly and are layered on top of the camera moves.
 const impacts = [
   [burstAt, 0.16, 0.55],
@@ -452,8 +734,11 @@ const impacts = [
 ];
 const camSavePos = new THREE.Vector3();
 const camSaveQuat = new THREE.Quaternion();
+
 function cameraShake(time) {
-  let x = 0, y = 0, roll = 0;
+  let x = 0,
+    y = 0,
+    roll = 0;
   for (const [at, amp, dur] of impacts) {
     const dt = time - at;
     if (dt < 0 || dt > dur) continue;
@@ -468,6 +753,7 @@ let blackBackdrop = false;
 let lastShineProgress = -1;
 let lastNow = null;
 let clock = 0;
+
 function frame(now) {
   requestAnimationFrame(frame);
   if (!assetsReady) {
@@ -487,7 +773,6 @@ function frame(now) {
     introCard.scale.setScalar(zoom);
     introMaterial.opacity = raw < 1.34 ? 1 : 1 - ease((raw - 1.34) / 0.26);
   } else introCard.visible = false;
-
   // The stroke sweeps in, then shakes violently at a randomly timed impact.
   const lineTravel = ease(t / 3.8);
   const burstShake = ease((t - burstAt) / 0.08) * (1 - ease((t - 5.35) / 0.24));
@@ -496,7 +781,6 @@ function frame(now) {
   lineGroup.position.y = -0.62 + earlyVibration * Math.sin(t * 38) * 0.026 + burstShake * Math.sin(t * 107) * 0.15;
   lineGroup.rotation.z = earlyVibration * Math.sin(t * 43) * 0.003 + burstShake * Math.sin(t * 79) * 0.055;
   lineGroup.visible = t < 5.55;
-
   if (t >= 1.78 && t < 5.55) {
     const run = t - 1.78;
     ball.visible = true;
@@ -535,7 +819,6 @@ function frame(now) {
     ballShadow.visible = false;
     particleBalls.forEach(p => p.mesh.visible = false);
   }
-
   if (t >= 7.26 && t < 8.8) {
     // Camera returns to the frontal ident view beneath the fast expanding rings.
     const restore = ease((t - 7.26) / 0.63);
@@ -564,7 +847,6 @@ function frame(now) {
     camera.position.set(0, 0, 12);
     camera.lookAt(0, 0, 0);
   }
-
   if (t >= 8.55) {
     logo.visible = true;
     const mainFade = ease((t - 8.55) / 0.92);
@@ -591,7 +873,6 @@ function frame(now) {
       }
     }
   }
-
   // Final Viacom-style V zoom, physical logo toss, and red S reveal.
   const vStart = 12.65;
   const launchAt = 15.05;
@@ -625,7 +906,6 @@ function frame(now) {
       titleMaterial.opacity = 1;
       shineMaterial.opacity = 0;
     }
-
     const barProgress = ease((t - barsAt) / 1.2);
     const barsVisible = t >= barsAt && t < 18.0;
     topBar.visible = bottomBar.visible = barsVisible;
@@ -652,7 +932,6 @@ function frame(now) {
     vGroup.visible = false;
     topBar.visible = bottomBar.visible = redDot.visible = sMesh.visible = false;
   }
-
   // Cut-paper ink-face interlude, hammer hit, then the new Guo Xiang sculpture mark.
   const collageStart = 18.55;
   if (t >= collageStart) {
@@ -661,7 +940,6 @@ function frame(now) {
     sMesh.visible = false;
     redDot.visible = false;
     topBar.visible = bottomBar.visible = false;
-
     const blueP = ease((t - 18.72) / 1.05);
     if (t < 19.78) scene.background.set(0x593274);
     else scene.background.set(0x145ecb);
@@ -679,13 +957,11 @@ function frame(now) {
       stain.mesh.scale.setScalar(Math.max(0.001, p * 0.72));
       stain.material.opacity = p * 0.95;
     });
-
     const handP = ease((t - 20.05) / 1.15);
     handSprite.mesh.visible = t >= 20.05 && t < 21.55;
     handSprite.mesh.position.set(-8.5 + handP * 17, 1.5 + Math.sin(t * 5) * 0.12, 4.4);
     handSprite.mesh.rotation.z = Math.sin(t * 4) * 0.035;
     handSprite.material.opacity = t < 21.25 ? 1 : 1 - ease((t - 21.25) / 0.3);
-
     faceCollage.visible = t >= 20.45 && t < 24.45;
     const eyeP = ease((t - 20.5) / 0.48);
     const mouthP = ease((t - 21.08) / 0.42);
@@ -700,7 +976,6 @@ function frame(now) {
     mouthSprite.mesh.position.y = lerp(1.95, -1.08, easeOutBack((t - 21.08) / 0.42));
     const talk = 1 + Math.abs(Math.sin(t * 18)) * 0.23;
     mouthSprite.mesh.scale.set(1, t > 21.65 && t < 23.0 ? talk : 1, 1);
-
     const speechOut = ease((t - 22.62) / 0.25);
     const speechP = ease((t - 21.85) / 0.32) * (1 - speechOut);
     spokenName.visible = speechP > 0.01;
@@ -716,7 +991,6 @@ function frame(now) {
         p.mat.opacity = 1 - ease(dt / 1.5);
       }
     } else speechBlocks.forEach(p => p.mesh.visible = false);
-
     const hitP = easeInCubic((t - 22.68) / 0.58);
     const recoil = easeOutCubic((t - 23.26) / 0.19);
     hammer.visible = t >= 22.68 && t < 23.45;
@@ -730,7 +1004,6 @@ function frame(now) {
       eyesSprite.material.opacity *= fadeFace;
       mouthSprite.material.opacity *= fadeFace;
     }
-
     if (t >= 24.1) {
       scene.background.set(0x0a080b);
       blueSplash.mesh.visible = inkStain.mesh.visible = false;
@@ -762,15 +1035,16 @@ function frame(now) {
       });
     }
   }
-
   // A brief collision between the four ident marks, followed by an encore of the classic ball-to-mask reveal.
   if (t >= 27.0 && t < 29.7) {
     scene.background.set(0x07070a);
-    sculpture.visible = false; dust.forEach(p => p.mesh.visible = false);
+    sculpture.visible = false;
+    dust.forEach(p => p.mesh.visible = false);
     blueSplash.mesh.visible = inkStain.mesh.visible = false;
     stainSatellites.forEach(p => p.mesh.visible = false);
     handSprite.mesh.visible = faceCollage.visible = hammer.visible = false;
-    logo.visible = false; vGroup.visible = false;
+    logo.visible = false;
+    vGroup.visible = false;
     const meet = ease((t - 27.0) / 1.0);
     const flying = Math.max(0, t - 28.22);
     fightLabels.forEach((item, i) => {
@@ -804,12 +1078,13 @@ function frame(now) {
     fightFlash.visible = false;
     debris.forEach(p => p.mesh.visible = false);
   }
-
   const replay = t - 29.7;
   if (replay >= 0) {
     // Reset the stage to the paper-white ball sequence.
-    logo.visible = false; vGroup.visible = false;
-    sculpture.visible = false; dust.forEach(p => p.mesh.visible = false);
+    logo.visible = false;
+    vGroup.visible = false;
+    sculpture.visible = false;
+    dust.forEach(p => p.mesh.visible = false);
     blueSplash.mesh.visible = inkStain.mesh.visible = false;
     stainSatellites.forEach(p => p.mesh.visible = false);
     handSprite.mesh.visible = faceCollage.visible = hammer.visible = false;
@@ -818,7 +1093,6 @@ function frame(now) {
     fightFlash.visible = false;
     if (replay < 8.54) scene.background.set(0xf3f1eb);
     else scene.background.set(0x030303);
-
     const replayShake = ease((replay - encoreBurstAt) / 0.08) * (1 - ease((replay - 5.35) / 0.24));
     const replayVibe = replay > 1.05 && replay < encoreBurstAt ? 1 : 0;
     lineGroup.visible = replay < 5.55;
@@ -828,41 +1102,55 @@ function frame(now) {
       const run = replay - 1.78;
       const x = replay < 4.65 ? -5.9 + run * 3.65 : 4.585 + (replay - 4.65) * 4.9;
       const bounce = hop(run);
-      ball.visible = true; ball.scale.setScalar(1);
+      ball.visible = true;
+      ball.scale.setScalar(1);
       ball.position.set(x, -0.62 + 0.245 + bounce - (replay > 4.92 ? (replay - 4.92) ** 2 * 5.8 : 0), 0.34);
       ball.rotation.set(run * 3.2, 0, -run * 5.5);
-      ballShadow.visible = true; ballShadow.position.x = x;
+      ballShadow.visible = true;
+      ballShadow.position.x = x;
       ballShadow.material.opacity = clamp(0.16 - bounce * 0.15, 0.045, 0.16);
       updateParticleBalls(replay, encoreBurstAt);
     } else if (replay >= 5.55 && replay < 7.28) {
-      ball.visible = true; ballShadow.visible = false;
+      ball.visible = true;
+      ballShadow.visible = false;
       const drop = ease((replay - 5.55) / 1.14);
       const shrink = replay < 6.85 ? 9.4 + 1.5 * drop : 10.9 * (1 - ease((replay - 6.85) / 0.43));
-      ball.position.set(0, 4.9 * (1 - drop) + 0.12, 0.6); ball.scale.setScalar(Math.max(0.001, shrink));
+      ball.position.set(0, 4.9 * (1 - drop) + 0.12, 0.6);
+      ball.scale.setScalar(Math.max(0.001, shrink));
       ball.rotation.set(replay * 0.58, replay * 0.71, replay * 0.32);
       particleBalls.forEach(p => p.mesh.visible = false);
-      camera.position.set(0, 8 * ease((replay - 5.55) / 0.65), 12 - 6.6 * ease((replay - 5.55) / 0.65)); camera.lookAt(0, 0, 0);
+      camera.position.set(0, 8 * ease((replay - 5.55) / 0.65), 12 - 6.6 * ease((replay - 5.55) / 0.65));
+      camera.lookAt(0, 0, 0);
     } else {
-      ball.visible = false; ballShadow.visible = false;
+      ball.visible = false;
+      ballShadow.visible = false;
       particleBalls.forEach(p => p.mesh.visible = false);
     }
     if (replay >= 7.26 && replay < 8.8) {
       const restore = ease((replay - 7.26) / 0.63);
-      camera.position.set(0, 8 * (1 - restore), 5.4 + 6.6 * restore); camera.lookAt(0, 0, 0);
+      camera.position.set(0, 8 * (1 - restore), 5.4 + 6.6 * restore);
+      camera.lookAt(0, 0, 0);
       rings.forEach((ring, i) => {
         const start = 7.27 + i * 0.09, p = ease((replay - start) / 1.12);
-        ring.visible = replay >= start && replay < 8.65; ring.scale.setScalar(Math.max(0.001, p * 13));
+        ring.visible = replay >= start && replay < 8.65;
+        ring.scale.setScalar(Math.max(0.001, p * 13));
       });
       const ip = ease((replay - 7.62) / 0.9);
-      iris.visible = replay >= 7.62 && replay < 8.56; iris.scale.setScalar(Math.max(0.001, ip * 18));
+      iris.visible = replay >= 7.62 && replay < 8.56;
+      iris.scale.setScalar(Math.max(0.001, ip * 18));
     } else if (replay >= 8.8) {
-      rings.forEach(r => r.visible = false); iris.visible = false;
-      camera.position.set(0, 0, 12); camera.lookAt(0, 0, 0);
+      rings.forEach(r => r.visible = false);
+      iris.visible = false;
+      camera.position.set(0, 0, 12);
+      camera.lookAt(0, 0, 0);
     }
     if (replay >= 8.54) {
-      rings.forEach(r => r.visible = false); iris.visible = false;
-      camera.position.set(0, 0, 12); camera.lookAt(0, 0, 0);
-      sculpture.visible = true; sculptureFace.mesh.visible = true;
+      rings.forEach(r => r.visible = false);
+      iris.visible = false;
+      camera.position.set(0, 0, 12);
+      camera.lookAt(0, 0, 0);
+      sculpture.visible = true;
+      sculptureFace.mesh.visible = true;
       const reveal = ease((replay - 8.55) / 1.05);
       sculpture.position.set(0, -0.08 + Math.sin(replay * 0.8) * 0.025, 0);
       sculpture.rotation.set(0.01, Math.sin(replay * 0.55) * 0.06, 0);
@@ -872,16 +1160,22 @@ function frame(now) {
       toadSprite.material.opacity = ease((replay - 8.95) / 0.4);
       toadSprite.mesh.position.set(-0.1, 2.62 + Math.abs(Math.sin(replay * 11)) * 0.025, 1.06);
       toadSprite.mesh.rotation.z = Math.sin(replay * 11) * 0.025;
-      scream.scale.set(0.12, 0.035, 1); screamLip.scale.set(1, 0.32, 1);
-      logo.visible = true; headMaterials.forEach(m => m.opacity = 0);
+      scream.scale.set(0.12, 0.035, 1);
+      screamLip.scale.set(1, 0.32, 1);
+      logo.visible = true;
+      headMaterials.forEach(m => m.opacity = 0);
       const replayTitleIn = easeOutCubic((replay - 10.0) / 1.0);
-      title.position.set(0, -3.0 - 0.2 * (1 - replayTitleIn), 0.95); title.rotation.z = 0;
+      title.position.set(0, -3.0 - 0.2 * (1 - replayTitleIn), 0.95);
+      title.rotation.z = 0;
       title.scale.setScalar(0.9 + 0.1 * replayTitleIn);
       shine.position.set(0, -3.0, 0.97);
       titleMaterial.opacity = ease((replay - 10.0) / 1.0);
       const shineP = clamp((replay - 10.9) / 1.2, 0, 1);
       shineMaterial.opacity = replay >= 10.9 && replay < 12.2 ? Math.sin(Math.PI * shineP) * 0.9 : 0;
-      if (replay >= 10.9 && replay < 12.15 && Math.abs(shineP - lastShineProgress) > 0.008) { drawShine(shineP); lastShineProgress = shineP; }
+      if (replay >= 10.9 && replay < 12.15 && Math.abs(shineP - lastShineProgress) > 0.008) {
+        drawShine(shineP);
+        lastShineProgress = shineP;
+      }
     }
   }
   const [shakeX, shakeY, shakeRoll] = cameraShake(t);
