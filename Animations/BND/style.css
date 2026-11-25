@@ -1,0 +1,73 @@
+:root {
+  --bg: #f2efe6
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  font-family: Georgia, serif
+}
+
+canvas {
+  display: block;
+  position: fixed;
+  inset: 0
+}
+
+#fade {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none
+}
+
+#title {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 4vh;
+  text-align: center;
+  font-size: min(18vw, 19vh);
+  font-weight: 900;
+  letter-spacing: .08em;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  font-family: "Trajan Pro", Cinzel, Georgia, serif;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(105deg, transparent 42%, rgba(255, 245, 215, .95) 50%, transparent 58%), linear-gradient(100deg, #4a2c12 0%, #b87333 25%, #e9b97a 42%, #8c5a2b 58%, #cd9a5b 78%, #4a2e14 100%);
+  background-size: 250% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 150% 0, 0 0;
+  filter: drop-shadow(0 .03em .05em rgba(0, 0, 0, .8))
+}
+
+#title.on {
+  animation: shine 3.2s ease-in-out infinite
+}
+
+@keyframes shine {
+  0% {
+    background-position: 150% 0, 0 0
+  }
+
+  60%,
+  100% {
+    background-position: -50% 0, 0 0
+  }
+}
+
+#hint {
+  position: fixed;
+  right: 12px;
+  top: calc(8px + env(safe-area-inset-top, 0px));
+  color: #888;
+  font: 12px sans-serif;
+  opacity: .6
+}

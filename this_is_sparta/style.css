@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Cinzel:wght@600;700;800&display=swap');
+
+:root {
+  color-scheme: dark;
+  --bg: #15120f;
+  --ink: #f4e9d2;
+  --gold: #e1b671;
+  --bronze: #d6ab6b;
+  --serif: Cinzel, 'Times New Roman', serif;
+  --sans: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+}
+* { box-sizing: border-box; }
+html, body, #game { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+body { background: var(--bg); }
+#game { position: relative; isolation: isolate; }
+#stage { position: absolute; inset: 0; }
+canvas { display: block; width: 100%; height: 100%; outline: none; touch-action: manipulation; }
+
+.brand {
+  position: absolute; z-index: 2; display: flex; flex-direction: column; line-height: .86;
+  left: max(clamp(20px, 4vw, 56px), env(safe-area-inset-left));
+  top: max(clamp(18px, 4vh, 42px), env(safe-area-inset-top));
+  text-shadow: 0 3px 18px #0009; pointer-events: none;
+}
+.brand span { font-size: clamp(14px, 1.5vw, 20px); font-weight: 700; letter-spacing: .34em; text-transform: uppercase; color: var(--gold); }
+.brand strong { font-family: var(--serif); font-size: clamp(32px, 5.5vw, 68px); font-weight: 800; letter-spacing: .04em; color: #f2e6d1; }
+.brand i { font-style: normal; font-weight: 600; letter-spacing: .52em; font-size: 11px; text-transform: uppercase; color: #d5b88e; margin-top: 8px; }
+
+.vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(0deg, #100c0ac9 0%, transparent 31%, transparent 70%, #1a130b66 100%),
+    radial-gradient(ellipse at center, transparent 48%, #120c08a3 100%);
+}
+
+.dialogue {
+  position: absolute; z-index: 3; left: 50%; transform: translateX(-50%);
+  bottom: max(clamp(20px, 5vh, 54px), env(safe-area-inset-bottom));
+  width: min(700px, calc(100% - 36px)); text-align: center; text-shadow: 0 2px 12px #000;
+}
+.speaker { font-size: clamp(12px, 1.3vw, 15px); font-weight: 800; letter-spacing: .26em; text-transform: uppercase; color: #e7bd76; margin-bottom: 7px; min-height: 1.2em; }
+.line { font-family: var(--serif); font-weight: 700; font-size: clamp(20px, 3.4vw, 38px); line-height: 1.12; min-height: 2.3em; color: #fff6e9; }
+
+.dialogue button {
+  margin-top: 14px; border: 1px solid var(--bronze); background: #241913d9; color: #f6dfb9;
+  padding: 12px 22px; min-height: 44px; font: 700 14px var(--sans); letter-spacing: .19em; text-transform: uppercase;
+  cursor: pointer; transition: background .18s, transform .18s, opacity .2s;
+}
+.dialogue button b { font-size: 17px; margin-left: 11px; color: var(--gold); }
+.dialogue button:hover { background: #694322; transform: translateY(-2px); }
+.dialogue button:active { transform: translateY(0); }
+.dialogue button:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.dialogue button.hidden { opacity: 0; pointer-events: none; visibility: hidden; }
+
+.flash { position: absolute; inset: 0; z-index: 4; background: #f7ddae; opacity: 0; pointer-events: none; }
+.flash.pop { animation: flash .42s ease-out; }
+.toast {
+  position: absolute; z-index: 4; left: 50%; top: 36%; transform: translate(-50%, -50%) scale(.7);
+  font-family: var(--serif); font-weight: 800; font-size: clamp(30px, 6vw, 74px); white-space: nowrap;
+  letter-spacing: .05em; color: #fff2da; text-shadow: 0 6px 35px #4b1000; opacity: 0; pointer-events: none;
+}
+.toast.show { animation: shout 1.35s cubic-bezier(.18, .75, .25, 1) forwards; }
+.fallback { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; font: 700 20px var(--sans); }
+
+@keyframes flash { 0% { opacity: .4; } 100% { opacity: 0; } }
+@keyframes shout {
+  0% { opacity: 0; transform: translate(-50%, -40%) scale(.7); }
+  20% { opacity: 1; transform: translate(-50%, -50%) scale(1.03); }
+  68% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -55%) scale(1.04); }
+}
+
+@media (max-height: 520px) {
+  .brand { top: 12px; }
+  .dialogue { bottom: 12px; }
+  .dialogue button { margin-top: 6px; padding: 8px 15px; }
+  .speaker { margin-bottom: 3px; }
+  .line { min-height: 1.3em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flash.pop { animation: none; }
+  .toast.show { animation: none; opacity: 1; transform: translate(-50%, -50%); }
+  .dialogue button { transition: none; }
+}

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#15120f">
+  <meta name="description" content="A tiny 3D retelling of a very famous kick.">
+  <title>This Is Sparta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="game.js"></script>
+</head>
+<body>
+  <main id="game" aria-label="This Is Sparta game">
+    <div id="stage"></div>
+    <header class="brand"><span>This is</span><strong>SPARTA</strong><i>The game</i></header>
+    <div class="vignette" aria-hidden="true"></div>
+    <section class="dialogue" aria-live="polite">
+      <div class="speaker" id="speaker">Persian messenger</div>
+      <div class="line" id="line"></div>
+      <button id="kick" type="button">Continue <b aria-hidden="true">↗</b></button>
+    </section>
+    <div class="flash" id="flash" aria-hidden="true"></div>
+    <div class="toast" id="toast" aria-hidden="true">THIS IS SPARTA.</div>
+    <noscript><p class="fallback">This game needs JavaScript and WebGL.</p></noscript>
+  </main>
+</body>
+</html>

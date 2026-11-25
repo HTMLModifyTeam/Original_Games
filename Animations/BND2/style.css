@@ -1,0 +1,54 @@
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: #f3f1eb;
+}
+
+#stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f3f1eb;
+}
+
+#scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+#replay {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(22px, 5vh, 48px);
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, .45);
+  border-radius: 999px;
+  padding: 11px 24px;
+  color: #f3f1eb;
+  background: rgba(30, 28, 29, .72);
+  font: 500 13px/1.2 system-ui, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+
+#replay:hover {
+  background: rgba(30, 28, 29, .92);
+  transform: translateX(-50%) scale(1.04);
+}
+
+#replay:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
